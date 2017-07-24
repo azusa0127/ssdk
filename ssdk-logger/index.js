@@ -137,7 +137,7 @@ class Logger {
    * @param {string|Buffer} [prefix=``] Prefix label.
    * @memberof Logger
    */
-  trace(data, prefix = null) {
+  trace(data, prefix = ``) {
     this._write(data, { channel:`trace`, prefix});
   }
   /**
