@@ -1,7 +1,7 @@
 {
     "name": "ssdk-logger",
     "version": "1.0.0",
-    "description": "Light weight Multi-channel Multi-stream Logger.",
+    "description": "Light-weight Multi-channel Logger.",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
