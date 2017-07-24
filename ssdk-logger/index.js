@@ -18,12 +18,12 @@ const { createWriteStream } = require(`fs`);
  */
 class Logger {
   /**
-   * Logger Constructor
-   *
+   * Creates an instance of Logger.
+   * @param {object} [Options = { level = `info`, prefix = ``, indent = 0, outStream }]
    * @param {string|number} [Options.level=`info`] Log Level. Determines the verboseness of the logger.
    * @param {string} [Options.prefix=``] Prefix label. The Label showed infront of every message.
    * @param {number} [Options.indent=0] Initial indentation. The initial number of spaces to indent.
-   * @param {stream.Writable|stream.Writable[]} [Options.outStream=console] The output stream(s) for the console, can be either a single stream for both stdout and stderr or [stdout, stderr].
+   * @memberof Logger
    */
   constructor({ level = `info`, prefix = ``, indent = 0, outStream } = {}) {
     this.LEVELS = [`error`, `warn`, `info`, `log`, `debug`, `trace`];
@@ -36,14 +36,16 @@ class Logger {
         : new console.Console(outStream, outStream)
       : console;
   }
-
   /**
-   * Internal write function, controls output template and output level control.
+   * nternal write function, controls output template and output level control.
+   *
    *
    * @param {any} data Data to be written.
+   * @param {any} [Options = { channel = `info`, prefix = ``, rawFormat = false } ]
    * @param {string|number} [Options.channel=`info`] Log Channel. Can be level string or its array index.
    * @param {string|Buffer} [Options.prefix=``] Sub-Prefix label.
-   * @param {bool} [rawFormat=false] If output in the raw format.
+   * @param {bool} [Options.rawFormat=false] If output in the raw format.
+   * @memberof Logger
    */
   _write(data, { channel = `info`, prefix = ``, rawFormat = false }) {
     if (typeof channel === `number`) channel = this.LEVELS[channel];
@@ -51,14 +53,14 @@ class Logger {
       // Debug output optimization
       if (channel === `debug` && typeof data !== `string`) data = JSON.stringify(data, null, 2);
       const timeStamp = new Date().toLocaleString(),
-        prefixes = `${timeStamp}|${channel.toUpperCase()}${` `.repeat(5 - channel.length)}${this
+        prefixes = `${timeStamp}|${` `.repeat(5 - channel.length)}${channel.toUpperCase()}${this
           .logPrefix.length
           ? `|${this.logPrefix}`
-          : ``}|${` `.repeat(this.logIndent)}${prefix.length ? `<${prefix}> ` : ``}`,
+          : ``}|${` `.repeat(this.logIndent)}${prefix.length ? `<${prefix}> ` : ``} `,
         message = rawFormat
           ? data
           : `${prefixes}${data && typeof data === `string`
-              ? data.replace(/\n/g, `\n${` `.repeat(prefixes.length)}`)
+              ? (data.endsWith(`\n`) ? data.slice(0, -1) : data).replace(/\n/g, `\n${` `.repeat(prefixes.length)}`)
               : data}`;
       switch (channel) {
         case `error`:
@@ -83,6 +85,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   error(data, prefix = ``) {
     this._write(data, { channel:`error`, prefix});
@@ -92,6 +95,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   warn(data, prefix = ``) {
     this._write(data, { channel:`warn`, prefix});
@@ -101,6 +105,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   info(data, prefix = ``) {
     this._write(data, { channel:`info`, prefix});
@@ -110,6 +115,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   log(data, prefix = ``) {
     this._write(data, { channel:`log`, prefix});
@@ -119,6 +125,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   debug(data, prefix = ``) {
     this._write(data, { channel:`debug`, prefix});
@@ -128,6 +135,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|Buffer} [prefix=``] Prefix label.
+   * @memberof Logger
    */
   trace(data, prefix = null) {
     this._write(data, { channel:`trace`, prefix});
@@ -137,6 +145,7 @@ class Logger {
    *
    * @param {any} data Data to be written.
    * @param {string|number} [channel=`info`] Output Channel.
+   * @memberof Logger
    */
   raw(data, channel = `info`) {
     this._write(data, {channel, rawFormat:true});
@@ -144,22 +153,33 @@ class Logger {
   /**
    * Group the logger calls by block and indent following logs.
    *
-   * @param {string|Buffer} [label=``] Group label.
+   * @param {string|Buffer} label Group label.
    * @param {string|number} [channel=`info`] Log Channel. Can be level string or its array index.
+   * @memberof Logger
    */
-  enterBlock(label = ``, channel = `info`) {
-    this._write(`${label} Begin...`, channel);
+  enterBlock(label, channel = `info`) {
+    this._write(`[${label}] Begin...`, channel);
     this.logIndent += 2;
   }
   /**
    * Ending the logger call block and unindent logs after.
    *
-   * @param {string|Buffer} [label=``] Group label.
+   * @param {string|Buffer} label Group label.
    * @param {string|number} [channel=`info`] Log Channel. Can be level string or its array index.
+   * @memberof Logger
    */
-  exitBlock(label = ``, channel = `info`) {
+  exitBlock(label, channel = `info`) {
     this.logIndent -= 2;
-    this._write(`${label} Completed!`, channel);
+    this._write(`[${label}] Completed!`, channel);
+  }
+  /**
+   * Change the Instance Log Level.
+   *
+   * @param {string} [level=`info`]
+   * @memberof Logger
+   */
+  setLogLevel(level = `info`){
+    this.logLevel = typeof level === `string` ? this.LEVELS.indexOf(level) : level;
   }
 }
 
