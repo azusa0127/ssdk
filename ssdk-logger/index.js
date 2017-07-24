@@ -51,7 +51,8 @@ class Logger {
     if (typeof channel === `number`) channel = this.LEVELS[channel];
     if (this.LEVELS.indexOf(channel) <= this.logLevel) {
       // Debug output optimization
-      if (channel === `debug` && typeof data !== `string`) data = JSON.stringify(data, null, 2);
+      if (channel === `debug` && typeof data !== `string`)
+        data = JSON.stringify(data, null, 2).replace(/\\n/g, `\n`);
       const timeStamp = new Date().toLocaleString(),
         prefixes = `${timeStamp}|${` `.repeat(5 - channel.length)}${channel.toUpperCase()}${this
           .logPrefix.length
@@ -60,7 +61,10 @@ class Logger {
         message = rawFormat
           ? data
           : `${prefixes}${data && typeof data === `string`
-              ? (data.endsWith(`\n`) ? data.slice(0, -1) : data).replace(/\n/g, `\n${` `.repeat(prefixes.length)}`)
+              ? (data.endsWith(`\n`) ? data.slice(0, -1) : data).replace(
+                  /\n/g,
+                  `\n${` `.repeat(prefixes.length)}`,
+                )
               : data}`;
       switch (channel) {
         case `error`:
@@ -88,7 +92,7 @@ class Logger {
    * @memberof Logger
    */
   error(data, prefix = ``) {
-    this._write(data, { channel:`error`, prefix});
+    this._write(data, { channel: `error`, prefix });
   }
   /**
    * Log data on `warn` channel with Console.error().
@@ -98,7 +102,7 @@ class Logger {
    * @memberof Logger
    */
   warn(data, prefix = ``) {
-    this._write(data, { channel:`warn`, prefix});
+    this._write(data, { channel: `warn`, prefix });
   }
   /**
    * Log data on `info` channel with Console.log().
@@ -108,7 +112,7 @@ class Logger {
    * @memberof Logger
    */
   info(data, prefix = ``) {
-    this._write(data, { channel:`info`, prefix});
+    this._write(data, { channel: `info`, prefix });
   }
   /**
    * Log data on `log` channel with Console.log().
@@ -118,7 +122,7 @@ class Logger {
    * @memberof Logger
    */
   log(data, prefix = ``) {
-    this._write(data, { channel:`log`, prefix});
+    this._write(data, { channel: `log`, prefix });
   }
   /**
    * Log data on `debug` channel with Console.log().
@@ -128,7 +132,7 @@ class Logger {
    * @memberof Logger
    */
   debug(data, prefix = ``) {
-    this._write(data, { channel:`debug`, prefix});
+    this._write(data, { channel: `debug`, prefix });
   }
   /**
    * Log data on `trace` channel with Console.trace().
@@ -138,7 +142,7 @@ class Logger {
    * @memberof Logger
    */
   trace(data, prefix = ``) {
-    this._write(data, { channel:`trace`, prefix});
+    this._write(data, { channel: `trace`, prefix });
   }
   /**
    * Output data in raw format.
@@ -148,7 +152,7 @@ class Logger {
    * @memberof Logger
    */
   raw(data, channel = `info`) {
-    this._write(data, {channel, rawFormat:true});
+    this._write(data, { channel, rawFormat: true });
   }
   /**
    * Group the logger calls by block and indent following logs.
@@ -178,7 +182,7 @@ class Logger {
    * @param {string} [level=`info`]
    * @memberof Logger
    */
-  setLogLevel(level = `info`){
+  setLogLevel(level = `info`) {
     this.logLevel = typeof level === `string` ? this.LEVELS.indexOf(level) : level;
   }
 }
