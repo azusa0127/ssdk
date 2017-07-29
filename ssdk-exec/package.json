@@ -1,0 +1,11 @@
+{
+    "name": "ssdk-exec",
+    "version": "1.0.0",
+    "description": "Shell/Cmd command excution library.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Phoenix Song (github/azusa0127)",
+    "license": "MIT"
+}
