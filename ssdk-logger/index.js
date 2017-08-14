@@ -1,8 +1,9 @@
+
 /**
- * Script-SDK - Logger
- *
- * @author Phoenix(github.com/azusa0127)
- * @version 1.0.0
+ * @file Script-SDK - Logger
+ * @version 1.0.1
+ * @author Phoenix Song <github.com/azusa0127>
+ * @copyright Phoenix Song (c) 2017
  */
 /**
  * ============================================================================
@@ -162,7 +163,7 @@ class Logger {
    * @memberof Logger
    */
   enterBlock(label, channel = `info`) {
-    this._write(`[${label}] Begin...`, channel);
+    this._write(`[${label}] Begin...`, { channel });
     this.logIndent += 2;
   }
   /**
@@ -174,7 +175,7 @@ class Logger {
    */
   exitBlock(label, channel = `info`) {
     this.logIndent -= 2;
-    this._write(`[${label}] Completed!`, channel);
+    this._write(`[${label}] Completed!`, { channel });
   }
   /**
    * Change the Instance Log Level.
