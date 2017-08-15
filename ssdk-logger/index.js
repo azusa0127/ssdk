@@ -1,7 +1,6 @@
-
 /**
  * @file Script-SDK - Logger
- * @version 1.0.1
+ * @version 1.0.2
  * @author Phoenix Song <github.com/azusa0127>
  * @copyright Phoenix Song (c) 2017
  */
@@ -48,7 +47,7 @@ class Logger {
    * @param {bool} [Options.rawFormat=false] If output in the raw format.
    * @memberof Logger
    */
-  _write(data, { channel = `info`, prefix = ``, rawFormat = false }) {
+  _write(data, { channel = `info`, prefix = ``, rawFormat = false, indentAfter = 0 }) {
     if (typeof channel === `number`) channel = this.LEVELS[channel];
     if (this.LEVELS.indexOf(channel) <= this.logLevel) {
       // Debug output optimization
@@ -83,6 +82,8 @@ class Logger {
         default:
           throw new Error(`Invalid Channel ${channel}!`);
       }
+      // Change Indentation
+      this.indent += indentAfter;
     }
   }
   /**
@@ -163,8 +164,7 @@ class Logger {
    * @memberof Logger
    */
   enterBlock(label, channel = `info`) {
-    this._write(`[${label}] Begin...`, { channel });
-    this.logIndent += 2;
+    this._write(`[${label}] Begin...`, { channel, indentAfter: 2 });
   }
   /**
    * Ending the logger call block and unindent logs after.
@@ -174,8 +174,7 @@ class Logger {
    * @memberof Logger
    */
   exitBlock(label, channel = `info`) {
-    this.logIndent -= 2;
-    this._write(`[${label}] Completed!`, { channel });
+    this._write(`[${label}] Completed!`, { channel, indentAfter: -2 });
   }
   /**
    * Change the Instance Log Level.
