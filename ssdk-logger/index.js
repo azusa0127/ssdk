@@ -1,6 +1,6 @@
 /**
  * @file Script-SDK - Logger
- * @version 1.0.2
+ * @version 1.1.0
  * @author Phoenix Song <github.com/azusa0127>
  * @copyright Phoenix Song (c) 2017
  */
@@ -11,6 +11,7 @@
  */
 const path = require(`path`);
 const { createWriteStream } = require(`fs`);
+const { format, inspect } = require(`util`);
 /**
  * ============================================================================
  * Library.
@@ -23,6 +24,7 @@ class Logger {
    * @param {string|number} [Options.level=`info`] Log Level. Determines the verboseness of the logger.
    * @param {string} [Options.prefix=``] Prefix label. The Label showed infront of every message.
    * @param {number} [Options.indent=0] Initial indentation. The initial number of spaces to indent.
+   * @param {stream.Writable|stream.Writable[]} [Options.outStream=[stdout, stderr]]
    * @memberof Logger
    */
   constructor({ level = `info`, prefix = ``, indent = 0, outStream } = {}) {
@@ -37,35 +39,35 @@ class Logger {
       : console;
   }
   /**
-   * nternal write function, controls output template and output level control.
+   * Internal write function, controls output template and output level control.
    *
-   *
-   * @param {any} data Data to be written.
-   * @param {any} [Options = { channel = `info`, prefix = ``, rawFormat = false } ]
-   * @param {string|number} [Options.channel=`info`] Log Channel. Can be level string or its array index.
-   * @param {string|Buffer} [Options.prefix=``] Sub-Prefix label.
-   * @param {bool} [Options.rawFormat=false] If output in the raw format.
+   * @param {any[]} data Data to be written.
+   * @param {string|number} [channel=`info`] Log Channel. Can be level string or its array index.
+   * @param {string|Buffer} [prefix=``] Sub-Prefix label.
+   * @param {bool} [rawFormat=false] If output in the raw format.
    * @memberof Logger
    */
   _write(data, { channel = `info`, prefix = ``, rawFormat = false, indentAfter = 0 }) {
     if (typeof channel === `number`) channel = this.LEVELS[channel];
     if (this.LEVELS.indexOf(channel) <= this.logLevel) {
-      // Debug output optimization
-      if (channel === `debug` && typeof data !== `string`)
-        data = JSON.stringify(data, null, 2).replace(/\\n/g, `\n`);
-      const timeStamp = new Date().toLocaleString(),
-        prefixes = `${timeStamp}|${` `.repeat(5 - channel.length)}${channel.toUpperCase()}${this
-          .logPrefix.length
-          ? `|${this.logPrefix}`
-          : ``}|${` `.repeat(this.logIndent)}${prefix.length ? `<${prefix}> ` : ``} `,
-        message = rawFormat
-          ? data
-          : `${prefixes}${data && typeof data === `string`
-              ? (data.endsWith(`\n`) ? data.slice(0, -1) : data).replace(
-                  /\n/g,
-                  `\n${` `.repeat(prefixes.length)}`,
-                )
-              : data}`;
+      const timeStamp = `${new Date().toLocaleString()}|`;
+      // Format prefixes.
+      const prefixes = rawFormat
+        ? ``
+        : format(
+            `%s%s%s%s%s`,
+            timeStamp,
+            ` `.repeat(5 - channel.length),
+            channel.toUpperCase(),
+            this.logPrefix.length ? `|${this.logPrefix}|` : `|`,
+            prefix.length ? ` <${prefix}> ` : ``,
+          );
+      // Re-format object string.
+      if (typeof data !== `string`) data = inspect(data, false, 10, true);
+      const message =
+        data.indexOf(`\n`) !== data.lastIndexOf(`\n`) && !rawFormat
+          ? `${prefixes}\n${data}`
+          : format(prefixes, data);
       switch (channel) {
         case `error`:
         case `warn`:
@@ -147,7 +149,7 @@ class Logger {
     this._write(data, { channel: `trace`, prefix });
   }
   /**
-   * Output data in raw format.
+   * Output data without formating.
    *
    * @param {any} data Data to be written.
    * @param {string|number} [channel=`info`] Output Channel.
@@ -180,10 +182,13 @@ class Logger {
    * Change the Instance Log Level.
    *
    * @param {string} [level=`info`]
+   * @return {number} Previous Log Level pre-operation.
    * @memberof Logger
    */
   setLogLevel(level = `info`) {
+    const prevLevel = this.logLevel;
     this.logLevel = typeof level === `string` ? this.LEVELS.indexOf(level) : level;
+    return prevLevel;
   }
 }
 

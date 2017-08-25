@@ -1,10 +1,10 @@
 {
     "name": "ssdk-logger",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "Light-weight Multi-channel Logger.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "node example.js"
     },
     "author": "Phoenix Song (github.com/azusa0127)",
     "license": "MIT"
