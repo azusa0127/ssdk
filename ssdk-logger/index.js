@@ -1,6 +1,6 @@
 /**
  * @file Script-SDK - Logger
- * @version 1.1.1
+ * @version 1.1.2
  * @author Phoenix Song <github.com/azusa0127>
  * @copyright Phoenix Song (c) 2017
  */
@@ -70,11 +70,12 @@ class Logger {
     const prefixes = rawFormat
       ? ``
       : format(
-          `%s%s%s%s%s`,
+          `%s%s%s%s%s%s`,
           timeStamp,
           ` `.repeat(5 - channel.length),
           channel.toUpperCase(),
           this.logPrefix.length ? `|${this.logPrefix}|` : `|`,
+          ` `.repeat(this.logIndent),
           prefix.length ? ` <${prefix}> ` : ``,
         );
     // Re-format object string.
@@ -101,7 +102,7 @@ class Logger {
         throw new Error(`Invalid Channel ${channel}!`);
     }
     // Change Indentation
-    this.indent += indentAfter;
+    this.logIndent += indentAfter;
     return true;
   }
   /**

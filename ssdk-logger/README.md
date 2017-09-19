@@ -75,19 +75,19 @@ log.trace(new Error(`A Big Error!`));
 ```
 Output:
 ```
-2017-8-25 13:00:46| INFO|HelloWorld| I'm telling you Something,
-2017-8-25 13:00:47| INFO|HelloWorld| A story.
-2017-8-25 13:00:47| INFO|HelloWorld| [Story] Begin...
-2017-8-25 13:00:47| INFO|HelloWorld| <BackGround>  Long long ago.
-2017-8-25 13:00:47| WARN|HelloWorld| [Warnings] Begin...
-2017-8-25 13:00:47| WARN|HelloWorld| 1.This story will be boring.
-2017-8-25 13:00:47| WARN|HelloWorld| 2.It's only single sentence.
-2017-8-25 13:00:47| WARN|HelloWorld| [Warnings] Completed!
-2017-8-25 13:00:47| INFO|HelloWorld| The quick brown fox jumps over the lazy dog.
-2017-8-25 13:00:47|ERROR|HelloWorld| <END OF STORY>  That's it.
-2017-8-25 13:00:47| INFO|HelloWorld| [Story] Completed!
-2017-8-25 13:00:47|  LOG|HelloWorld| Now You should see me
-2017-8-25 13:00:47|DEBUG|HelloWorld| <s>
+2017-9-19 15:34:40| INFO|HelloWorld| I'm telling you Something,
+2017-9-19 15:34:40| INFO|HelloWorld| A story.
+2017-9-19 15:34:40| INFO|HelloWorld| [Story] Begin...
+2017-9-19 15:34:40| INFO|HelloWorld|   <BackGround>  Long long ago.
+2017-9-19 15:34:40| WARN|HelloWorld|   [Warnings] Begin...
+2017-9-19 15:34:40| WARN|HelloWorld|     1.This story will be boring.
+2017-9-19 15:34:40| WARN|HelloWorld|     2.It's only single sentence.
+2017-9-19 15:34:40| WARN|HelloWorld|     [Warnings] Completed!
+2017-9-19 15:34:40| INFO|HelloWorld|   The quick brown fox jumps over the lazy dog.
+2017-9-19 15:34:40|ERROR|HelloWorld|   <END OF STORY>  That's it.
+2017-9-19 15:34:40| INFO|HelloWorld|   [Story] Completed!
+2017-9-19 15:34:40|  LOG|HelloWorld| Now You should see me
+2017-9-19 15:34:40|DEBUG|HelloWorld| <s>
 { glossary:
    { title: 'example glossary',
      GlossDiv:
@@ -103,34 +103,34 @@ Output:
                { para: 'A meta-markup language, used to create markup languages such as DocBook.',
                  GlossSeeAlso: [ 'GML', 'XML' ] },
               GlossSee: 'markup' } } } } }
-Trace: 2017-8-25 13:00:47|TRACE|HelloWorld|
-Error: A Big Error!
+2017-9-19 15:34:40|TRACE|HelloWorld|
+Trace: Error: A Big Error!
     at Object.<anonymous> (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\example.js:47:11)
-    at Module._compile (module.js:569:30)
-    at Object.Module._extensions..js (module.js:580:10)
-    at Module.load (module.js:503:32)
-    at tryModuleLoad (module.js:466:12)
-    at Function.Module._load (module.js:458:3)
-    at Function.Module.runMain (module.js:605:10)
-    at startup (bootstrap_node.js:158:16)
-    at bootstrap_node.js:575:3
-    at Logger._write (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\index.js:82:24)
-    at Logger.trace (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\index.js:149:10)
+    at Module._compile (module.js:624:30)
+    at Object.Module._extensions..js (module.js:635:10)
+    at Module.load (module.js:545:32)
+    at tryModuleLoad (module.js:508:12)
+    at Function.Module._load (module.js:500:3)
+    at Function.Module.runMain (module.js:665:10)
+    at startup (bootstrap_node.js:201:16)
+    at bootstrap_node.js:626:3
+    at Logger._write (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\index.js:90:23)
+    at Logger.trace (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\index.js:172:17)
     at Object.<anonymous> (C:\Users\psong\Desktop\git\maintain\ssdk\ssdk-logger\example.js:47:5)
-    at Module._compile (module.js:569:30)
-    at Object.Module._extensions..js (module.js:580:10)
-    at Module.load (module.js:503:32)
-    at tryModuleLoad (module.js:466:12)
-    at Function.Module._load (module.js:458:3)
-    at Function.Module.runMain (module.js:605:10)
-    at startup (bootstrap_node.js:158:16)
+    at Module._compile (module.js:624:30)
+    at Object.Module._extensions..js (module.js:635:10)
+    at Module.load (module.js:545:32)
+    at tryModuleLoad (module.js:508:12)
+    at Function.Module._load (module.js:500:3)
+    at Function.Module.runMain (module.js:665:10)
+    at startup (bootstrap_node.js:201:16)
 ```
 
 FileLogger
 -----
 example:
 ```
-const { FileLogger } = require(`./index.js`);
+const { FileLogger } = require(`ssdk-logger`);
 const log = new FileLogger(`hello.log`, { prefix:`HelloWorld` });
 ```
 
