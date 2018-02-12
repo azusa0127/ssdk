@@ -2,6 +2,8 @@
 A Simple Multi-channel Logger.
 ------
 
+## _[Deprecation] This package is now deprecated in favor of it's successor [simple.logger](https://www.npmjs.com/package/simple.logger) or the popular lib [log4js](https://www.npmjs.com/package/log4js)._
+
 ## What it does
 * Drop-in replacement for `console` - yes, you can use it exactly as using `console`.
 * Multi-Channel control - allow verbose logs to be dynamically muted.
